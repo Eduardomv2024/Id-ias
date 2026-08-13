@@ -1,24 +1,44 @@
-# Portfólio — Projetos Full Stack
+# PulseAnalytics — Dashboard SaaS de Analytics
 
-Coleção de projetos full stack desenvolvidos para demonstrar capacidade técnica em diferentes stacks: Python (Flask/Django) e JavaScript (Node.js/React).
+Mini-SaaS full stack com autenticação e dashboard de métricas de negócio,
+no estilo de produtos como Mixpanel/Baremetrics.
 
-## Projetos
+**Stack:** Node.js, Express, JWT, React (Vite), Recharts.
 
-### [EstoquePro — Sistema de Gestão de Estoque e Vendas](./estoque-flask)
-**Stack:** Python, Flask, SQLAlchemy, SQLite
+## Funcionalidades
 
-Sistema full stack para controle de produtos, estoque e vendas de pequenos e médios negócios. Dashboard com indicadores, cadastro de produtos, registro de vendas com baixa automática de estoque.
+- Autenticação com registro/login e tokens JWT
+- API REST protegida por middleware de autenticação
+- Dashboard com KPIs (MRR, usuários ativos, conversão, churn)
+- Gráficos interativos: receita mensal, receita por categoria,
+  crescimento de usuários e churn mensal (Recharts)
+- Layout responsivo
 
-### [PulseAnalytics — Dashboard SaaS de Analytics](./analytics-saas)
-**Stack:** Node.js, Express, JWT, React, Recharts
+## Como rodar localmente
 
-Mini-SaaS com autenticação e dashboard interativo exibindo métricas de negócio (receita recorrente, crescimento de usuários, churn, conversão), com API REST protegida.
+Backend:
+```bash
+cd analytics-saas/server
+npm install
+npm start                # inicia em http://localhost:4000
+```
 
-### [TaskFlow CRM — Gestão de Contatos e Tarefas](./crm-django)
-**Stack:** Python, Django, Django REST Framework, SQLite
+Frontend (em outro terminal):
+```bash
+cd analytics-saas/client
+npm install
+npm run dev               # inicia em http://localhost:5173
+```
 
-Mini-CRM com board Kanban para gestão de tarefas vinculadas a contatos/clientes, API REST via Django REST Framework e painel administrativo integrado.
+Conta de demonstração já cadastrada: **demo@saas.com** / **demo1234**
+(ou crie uma conta nova pela tela de cadastro).
 
-## Sobre
+## Texto para o portfólio do Workana
 
-Cada projeto tem seu próprio README com instruções de como rodar localmente. Todos foram construídos do zero, com foco em boas práticas de arquitetura, código organizado e interfaces limpas.
+> **PulseAnalytics — Dashboard SaaS de Analytics**
+> Mini-SaaS full stack com autenticação (Node.js/Express + JWT) e dashboard
+> interativo em React, exibindo métricas de negócio como receita
+> recorrente, crescimento de usuários, churn e conversão. Projeto
+> demonstra API REST protegida, gerenciamento de estado de autenticação no
+> front-end e visualização de dados com gráficos (Recharts) — a base de
+> qualquer produto SaaS com painel de métricas.
