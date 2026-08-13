@@ -1,0 +1,36 @@
+{% extends "board/base.html" %}
+{% block title %}Contatos · TaskFlow{% endblock %}
+{% block header %}Contatos{% endblock %}
+{% block header_action %}
+<a href="{% url 'contact_new' %}" class="btn">+ Novo contato</a>
+{% endblock %}
+
+{% block content %}
+<div class="table-card">
+  <table>
+    <thead>
+      <tr><th>Nome</th><th>Empresa</th><th>E-mail</th><th>Telefone</th><th>Tarefas em aberto</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for c in contacts %}
+      <tr>
+        <td><strong>{{ c.name }}</strong></td>
+        <td class="text-muted">{{ c.company|default:"—" }}</td>
+        <td class="text-muted">{{ c.email|default:"—" }}</td>
+        <td class="text-muted">{{ c.phone|default:"—" }}</td>
+        <td>{{ c.open_tasks }} / {{ c.total_tasks }}</td>
+        <td class="actions-cell">
+          <a href="{% url 'contact_edit' c.id %}" class="edit-link">editar</a>
+          <form method="post" action="{% url 'contact_delete' c.id %}" style="display:inline;" onsubmit="return confirm('Remover contato?');">
+            {% csrf_token %}
+            <button class="link-btn">excluir</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="text-muted" style="text-align:center; padding: 24px;">Nenhum contato cadastrado ainda.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

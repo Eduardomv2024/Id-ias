@@ -1,0 +1,54 @@
+{% extends "board/base.html" %}
+{% block title %}{{ task|yesno:"Editar,Nova" }} tarefa · TaskFlow{% endblock %}
+{% block header %}{{ task|yesno:"Editar tarefa,Nova tarefa" }}{% endblock %}
+
+{% block content %}
+<form method="post" class="form-card">
+  {% csrf_token %}
+  <div class="form-group">
+    <label>Título</label>
+    <input name="title" required value="{{ task.title|default:'' }}">
+  </div>
+  <div class="form-group">
+    <label>Descrição</label>
+    <textarea name="description">{{ task.description|default:'' }}</textarea>
+  </div>
+  <div class="form-row cols-2">
+    <div class="form-group" style="margin-bottom:0;">
+      <label>Contato</label>
+      <select name="contact">
+        <option value="">— nenhum —</option>
+        {% for c in contacts %}
+        <option value="{{ c.id }}" {% if task and task.contact_id == c.id %}selected{% endif %}>{{ c.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group" style="margin-bottom:0;">
+      <label>Prazo</label>
+      <input type="date" name="due_date" value="{{ task.due_date|date:'Y-m-d'|default:'' }}">
+    </div>
+  </div>
+  <div class="form-row cols-2">
+    <div class="form-group" style="margin-bottom:0;">
+      <label>Status</label>
+      <select name="status">
+        <option value="todo" {% if task.status == "todo" or not task %}selected{% endif %}>A fazer</option>
+        <option value="doing" {% if task.status == "doing" %}selected{% endif %}>Em andamento</option>
+        <option value="done" {% if task.status == "done" %}selected{% endif %}>Concluído</option>
+      </select>
+    </div>
+    <div class="form-group" style="margin-bottom:0;">
+      <label>Prioridade</label>
+      <select name="priority">
+        <option value="low" {% if task.priority == "low" %}selected{% endif %}>Baixa</option>
+        <option value="medium" {% if task.priority == "medium" or not task %}selected{% endif %}>Média</option>
+        <option value="high" {% if task.priority == "high" %}selected{% endif %}>Alta</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-actions">
+    <button class="btn">Salvar</button>
+    <a href="{% url 'board' %}" class="btn btn-ghost">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

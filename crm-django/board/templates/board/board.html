@@ -1,0 +1,57 @@
+{% extends "board/base.html" %}
+{% block title %}Board · TaskFlow{% endblock %}
+{% block header %}Board de tarefas{% endblock %}
+{% block header_action %}
+<a href="{% url 'task_new' %}" class="btn">+ Nova tarefa</a>
+{% endblock %}
+
+{% block content %}
+<div class="stat-grid">
+  <div class="card"><p class="label">Total de tarefas</p><p class="value">{{ stats.total }}</p></div>
+  <div class="card"><p class="label">Concluídas</p><p class="value">{{ stats.done }}</p></div>
+  <div class="card"><p class="label">Alta prioridade em aberto</p><p class="value red">{{ stats.high_priority_open }}</p></div>
+  <div class="card"><p class="label">Contatos</p><p class="value">{{ stats.contacts }}</p></div>
+</div>
+
+<div class="kanban">
+  {% for col in columns %}
+  <div class="kanban-col" data-status="{{ col.value }}">
+    <div class="kanban-col-header">
+      <h3>{{ col.label }}</h3>
+      <span class="kanban-count">{{ col.count }}</span>
+    </div>
+
+    {% for task in col.tasks %}
+    <div class="task-card">
+      <h4>{{ task.title }}</h4>
+      {% if task.description %}<p class="desc">{{ task.description|truncatechars:80 }}</p>{% endif %}
+      <div class="task-meta">
+        <span class="badge priority-{{ task.priority }}">{{ task.get_priority_display }}</span>
+        {% if task.contact %}<span class="badge contact">{{ task.contact.name }}</span>{% endif %}
+        {% if task.due_date %}<span class="badge due">📅 {{ task.due_date|date:"d/m" }}</span>{% endif %}
+      </div>
+      <div class="task-actions">
+        <form method="post" action="{% url 'task_update_status' task.id %}">
+          {% csrf_token %}
+          <select name="status" onchange="this.form.submit()">
+            {% for value, label in task.Status.choices %}
+            <option value="{{ value }}" {% if value == task.status %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </form>
+        <div class="links">
+          <a href="{% url 'task_edit' task.id %}">editar</a>
+          <form method="post" action="{% url 'task_delete' task.id %}" onsubmit="return confirm('Excluir tarefa?');">
+            {% csrf_token %}
+            <button class="link-btn danger">excluir</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p class="empty-col">Nenhuma tarefa aqui.</p>
+    {% endfor %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

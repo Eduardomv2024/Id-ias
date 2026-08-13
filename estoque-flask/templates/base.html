@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Estoque Pro{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <p class="logo">Estoque<span>Pro</span></p>
+        <p class="tagline">Gestão de estoque &amp; vendas</p>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="{{ url_for('dashboard') }}" class="{{ 'active' if request.endpoint=='dashboard' else '' }}">📊 Dashboard</a>
+        <a href="{{ url_for('products') }}" class="{{ 'active' if request.endpoint in ['products','product_new','product_edit'] else '' }}">📦 Produtos</a>
+        <a href="{{ url_for('sales') }}" class="{{ 'active' if request.endpoint in ['sales','sale_new'] else '' }}">💰 Vendas</a>
+      </nav>
+      <div class="sidebar-footer">Projeto de portfólio &middot; Flask + SQLAlchemy</div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <h1>{% block header %}{% endblock %}</h1>
+        {% block header_action %}{% endblock %}
+      </header>
+
+      <div class="content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+  </div>
+</body>
+</html>

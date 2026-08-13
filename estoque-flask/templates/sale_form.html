@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Nova venda · EstoquePro{% endblock %}
+{% block header %}Registrar venda{% endblock %}
+
+{% block content %}
+<form method="post" class="form-card">
+  <div class="form-group">
+    <label>Produto</label>
+    <select name="product_id" required>
+      {% for p in products %}
+      <option value="{{ p.id }}">{{ p.name }} — R$ {{ "%.2f"|format(p.price) }} ({{ p.stock_qty }} em estoque)</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-row cols-2">
+    <div class="form-group" style="margin-bottom:0;">
+      <label>Quantidade</label>
+      <input type="number" name="quantity" min="1" value="1" required>
+    </div>
+    <div class="form-group" style="margin-bottom:0;">
+      <label>Data</label>
+      <input type="date" name="sold_at" value="{{ today }}" required>
+    </div>
+  </div>
+  <div class="form-actions">
+    <button class="btn">Registrar</button>
+    <a href="{{ url_for('sales') }}" class="btn btn-ghost">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

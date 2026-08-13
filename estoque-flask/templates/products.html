@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Produtos · EstoquePro{% endblock %}
+{% block header %}Produtos{% endblock %}
+{% block header_action %}
+<a href="{{ url_for('product_new') }}" class="btn">+ Novo produto</a>
+{% endblock %}
+
+{% block content %}
+<div class="table-card">
+  <div class="filters">
+    <a href="{{ url_for('products') }}" class="pill {{ 'active' if not selected else '' }}">Todas</a>
+    {% for c in categories %}
+    <a href="{{ url_for('products', category=c) }}" class="pill {{ 'active' if selected==c else '' }}">{{ c }}</a>
+    {% endfor %}
+  </div>
+  <table>
+    <thead>
+      <tr><th>SKU</th><th>Nome</th><th>Categoria</th><th>Preço</th><th>Estoque</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for p in products %}
+      <tr class="{{ 'low-stock' if p.is_low_stock else '' }}">
+        <td class="mono">{{ p.sku }}</td>
+        <td><strong>{{ p.name }}</strong></td>
+        <td class="text-muted">{{ p.category }}</td>
+        <td>R$ {{ "%.2f"|format(p.price) }}</td>
+        <td class="{{ 'text-red' if p.is_low_stock else '' }}">{{ p.stock_qty }}</td>
+        <td class="actions-cell">
+          <a href="{{ url_for('product_edit', pid=p.id) }}" class="edit-link">editar</a>
+          <form method="post" action="{{ url_for('product_delete', pid=p.id) }}" style="display:inline;" onsubmit="return confirm('Remover produto?');">
+            <button class="link-btn">excluir</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · EstoquePro{% endblock %}
+{% block header %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="stat-grid">
+  <div class="card">
+    <p class="label">Produtos cadastrados</p>
+    <p class="value">{{ total_products }}</p>
+  </div>
+  <div class="card">
+    <p class="label">Valor em estoque</p>
+    <p class="value">R$ {{ "%.2f"|format(stock_value) }}</p>
+  </div>
+  <div class="card">
+    <p class="label">Total vendido</p>
+    <p class="value green">R$ {{ "%.2f"|format(sales_total) }}</p>
+    <p class="sub">{{ sales_count }} vendas registradas</p>
+  </div>
+  <div class="card {{ 'alert-ring' if low_stock else '' }}">
+    <p class="label">Estoque baixo</p>
+    <p class="value {{ 'red' if low_stock else '' }}">{{ low_stock|length }}</p>
+    <p class="sub">produtos abaixo do mínimo</p>
+  </div>
+</div>
+
+<div class="two-col">
+  <div class="card">
+    <h2 class="section-title">⚠️ Alertas de estoque baixo</h2>
+    {% if low_stock %}
+    <table>
+      <thead><tr><th>Produto</th><th>Qtd.</th><th>Mínimo</th></tr></thead>
+      <tbody>
+        {% for p in low_stock %}
+        <tr>
+          <td><strong>{{ p.name }}</strong></td>
+          <td class="text-red">{{ p.stock_qty }}</td>
+          <td class="text-muted">{{ p.min_stock }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="text-muted">Nenhum produto abaixo do estoque mínimo. 🎉</p>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">🏆 Mais vendidos</h2>
+    {% if top_products %}
+    {% for name, qty in top_products %}
+    <div class="bar-row">
+      <div class="bar-label"><span>{{ name }}</span><span class="text-muted">{{ qty }} un.</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width: {{ (qty / top_products[0][1] * 100)|round }}%"></div></div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p class="text-muted">Ainda sem vendas registradas.</p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card" style="margin-top: 24px;">
+  <h2 class="section-title">🕒 Vendas recentes</h2>
+  <table>
+    <thead><tr><th>Data</th><th>Produto</th><th>Qtd.</th><th>Total</th></tr></thead>
+    <tbody>
+      {% for s in recent_sales %}
+      <tr>
+        <td class="text-muted">{{ s.sold_at.strftime("%d/%m/%Y") }}</td>
+        <td><strong>{{ s.product.name }}</strong></td>
+        <td>{{ s.quantity }}</td>
+        <td class="text-green">R$ {{ "%.2f"|format(s.total) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

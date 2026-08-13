@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Vendas · EstoquePro{% endblock %}
+{% block header %}Vendas{% endblock %}
+{% block header_action %}
+<a href="{{ url_for('sale_new') }}" class="btn">+ Registrar venda</a>
+{% endblock %}
+
+{% block content %}
+<div class="table-card">
+  <table>
+    <thead>
+      <tr><th>Data</th><th>Produto</th><th>Qtd.</th><th>Preço unit.</th><th>Total</th></tr>
+    </thead>
+    <tbody>
+      {% for s in sales %}
+      <tr>
+        <td class="text-muted">{{ s.sold_at.strftime("%d/%m/%Y") }}</td>
+        <td><strong>{{ s.product.name }}</strong></td>
+        <td>{{ s.quantity }}</td>
+        <td>R$ {{ "%.2f"|format(s.unit_price) }}</td>
+        <td class="text-green">R$ {{ "%.2f"|format(s.total) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
